@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>JL Befaring – klikkbar prototype</title>
+<style>
+  :root{
+    --bg:#f4f5f7;--card:#fff;--text:#101828;--muted:#667085;--line:#d0d5dd;--accent:#1f6feb;--ok:#12b76a;--warn:#f79009;--bad:#f04438;--dark:#111827;
+  }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text)}
+  .app{max-width:980px;margin:0 auto;min-height:100vh;background:var(--bg)}
+  header{position:sticky;top:0;z-index:5;background:rgba(244,245,247,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 16px;display:flex;align-items:center;gap:12px}
+  h1{font-size:19px;margin:0;line-height:1.15}.sub{font-size:13px;color:var(--muted);margin-top:2px}.grow{flex:1}.screen{display:none;padding:16px 14px 95px}.screen.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:0 0 12px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+  .row{display:flex;gap:10px;align-items:center}.wrap{flex-wrap:wrap}.btn{border:0;border-radius:12px;background:var(--accent);color:white;font-weight:700;padding:12px 14px;font-size:15px;cursor:pointer}.btn.secondary{background:#fff;color:var(--text);border:1px solid var(--line)}.btn.dark{background:var(--dark)}.btn.ghost{background:transparent;color:var(--accent);padding:8px}.btn.full{width:100%;text-align:center}.back{border:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;min-height:70px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer}.tile .title{font-weight:750}.tile .meta{font-size:12px;color:var(--muted);margin-top:6px}.status{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:700}.s0{background:#f2f4f7;color:#475467}.s1{background:#fffaeb;color:#b54708}.s2{background:#ecfdf3;color:#027a48}.s3{background:#fef3f2;color:#b42318}.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 11px;font-size:14px;margin:4px}.pill.active{border-color:var(--accent);background:#eff6ff;color:#1849a9}.section-title{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:800;margin:18px 4px 8px}.field{margin:10px 0}.label{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:5px}input,textarea,select{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px;font-size:16px;color:var(--text)}textarea{min-height:130px;resize:vertical}.mini{font-size:12px;color:var(--muted)}.photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}.photo{height:78px;border:1px dashed var(--line);border-radius:12px;background:#f9fafb;display:flex;align-items:center;justify-content:center;color:#98a2b3;font-weight:800;font-size:24px}.bottom{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center}.bottom .inner{display:flex;gap:10px;max-width:980px;width:100%}.list{display:flex;flex-direction:column;gap:8px}.item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;display:flex;align-items:center;gap:10px;cursor:pointer}.item .main{font-weight:750}.item .small{font-size:12px;color:var(--muted);margin-top:3px}.dot{width:11px;height:11px;border-radius:50%;background:#d0d5dd}.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}.export{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#101828;color:#f9fafb;border-radius:14px;padding:14px;min-height:220px;font-size:13px;overflow:auto}.tag{font-size:12px;background:#eef4ff;color:#3538cd;border-radius:999px;padding:4px 7px;font-weight:700}.notice{background:#fffaeb;border:1px solid #fedf89;color:#93370d;border-radius:14px;padding:12px;font-size:14px;margin-bottom:12px}.split{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}@media(max-width:700px){.grid,.grid3,.split{grid-template-columns:1fr}.photo-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <button class="back" id="backBtn" onclick="goBack()">←</button>
+  <div><h1 id="headTitle">JL Befaring</h1><div class="sub" id="headSub">Klikkbar prototype – v0.1</div></div><div class="grow"></div>
+  <button class="btn secondary" onclick="show('export')">Eksport</button>
+</header>
+
+<section id="home" class="screen active">
+  <div class="notice">Prototype: ingen ekte lagring. Bruk den til å kjenne på rekkefølge, knapper og skjermflyt.</div>
+  <div class="card">
+    <div class="row"><div><h1>Oppdrag</h1><div class="sub">Intern arbeidsflyt før IVIT og Fiken</div></div><div class="grow"></div><button class="btn" onclick="show('newcase')">+ Nytt</button></div>
+  </div>
+  <div class="list">
+    <div class="item" onclick="show('case')"><span class="dot warn"></span><div><div class="main">22464-1150 – Bergveien 15</div><div class="small">Enebolig · Pågående befaring · 18/72 punkter</div></div></div>
+    <div class="item"><span class="dot ok"></span><div><div class="main">22464-1149 – Hareveien 9</div><div class="small">Eksport klar · Til IVIT</div></div></div>
+  </div>
+</section>
+
+<section id="newcase" class="screen">
+  <div class="card"><h1>Nytt oppdrag</h1><div class="field"><div class="label">Oppdragsnummer</div><input value="22464-1150"></div><div class="field"><div class="label">Adresse</div><input value="Bergveien 15"></div><div class="field"><div class="label">Kunde / megler</div><input placeholder="Navn"></div><div class="grid"><div class="field"><div class="label">Byggeår</div><input value="1978"></div><div class="field"><div class="label">Boligtype</div><select><option>Enebolig</option><option>Leilighet</option><option>Tomannsbolig</option><option>Hytte</option></select></div></div><button class="btn full" onclick="show('case')">Opprett og gå til oppdrag</button></div>
+</section>
+
+<section id="case" class="screen">
+  <div class="card"><div class="row wrap"><div><h1>Bergveien 15</h1><div class="sub">22464-1150 · Enebolig · Byggeår 1978</div></div><div class="grow"></div><span class="tag">18/72 kontrollpunkt</span></div></div>
+  <div class="grid">
+    <div class="tile" onclick="show('broker')"><div class="title">Meglerinfo først</div><div class="meta">Arealer, byggemåte, overflater, oppvarming</div></div>
+    <div class="tile" onclick="show('areas')"><div class="title">Arealer / rom</div><div class="meta">Etasjer, rom og arealnotater</div></div>
+    <div class="tile" onclick="show('inspection')"><div class="title">Start befaring</div><div class="meta">Utvendig → kjeller → etasjer → loft</div></div>
+    <div class="tile" onclick="show('export')"><div class="title">Eksport</div><div class="meta">IVIT-kladd, meglersammendrag, Fiken tekst</div></div>
+  </div>
+</section>
+
+<section id="broker" class="screen">
+  <div class="card"><h1>Meglerinfo først</h1><div class="sub">Lett tilgjengelig før rapporten er ferdig</div></div>
+  <div class="card"><div class="field"><div class="label">Arealer</div><textarea>BRA-i: ___ m²\nBRA-e: ___ m²\nTBA: ___ m²\nKommentar: Må kontrolleres mot endelig arealmåling.</textarea></div><div class="field"><div class="label">Enkel byggemåte</div><textarea>Enebolig oppført med ... Fundamentert på ... Yttervegger av ... Saltak tekket med ...</textarea></div><div class="field"><div class="label">Overflater pr. etasje</div><textarea>Kjeller: ...\n1. etasje: ...\n2. etasje: ...\nLoft: ...</textarea></div><div class="field"><div class="label">Oppvarmingsmåte</div><textarea>Elektrisk oppvarming med panelovner/varmekabler. Vedovn/ildsted i ... Varmepumpe i ...</textarea></div></div>
+</section>
+
+<section id="areas" class="screen">
+  <div class="card"><div class="row"><h1>Arealer og rom</h1><div class="grow"></div><button class="btn secondary">+ Rom</button></div></div>
+  <div class="section-title">Etasjer</div>
+  <div class="list">
+    <div class="item"><span class="dot warn"></span><div><div class="main">Kjeller</div><div class="small">Bod, vaskerom, kjellerstue · arealnotat mangler</div></div></div>
+    <div class="item"><span class="dot ok"></span><div><div class="main">1. etasje</div><div class="small">Entré, stue, kjøkken, bad, soverom</div></div></div>
+    <div class="item"><span class="dot s0"></span><div><div class="main">Loft</div><div class="small">Kaldloft / lagring</div></div></div>
+  </div>
+</section>
+
+<section id="inspection" class="screen">
+  <div class="card"><h1>Befaringsmodus</h1><div class="sub">Følger din praktiske rekkefølge, ikke IVIT-rekkefølgen.</div></div>
+  <div class="section-title">Utvendig + tak</div>
+  <div class="grid3">
+    <div class="tile" onclick="openPoint('Taktekking','Utvendig + tak')"><span class="status s1">Påbegynt</span><div class="title">Taktekking</div><div class="meta">3 bilder · 1 kommentar</div></div>
+    <div class="tile" onclick="openPoint('Takrenner/beslag','Utvendig + tak')"><span class="status s0">Ikke startet</span><div class="title">Takrenner</div><div class="meta">Nedløp og beslag</div></div>
+    <div class="tile" onclick="openPoint('Pipe/ildsted utvendig','Utvendig + tak')"><span class="status s3">Må tilbake</span><div class="title">Pipe</div><div class="meta">Sjekk beslag/avstand</div></div>
+    <div class="tile" onclick="openPoint('Vegg/kledning','Utvendig + tak')"><span class="status s0">Ikke startet</span><div class="title">Vegger</div><div class="meta">Kledning, lufting, råte</div></div>
+    <div class="tile" onclick="openPoint('Vinduer/dører','Utvendig + tak')"><span class="status s0">Ikke startet</span><div class="title">Vinduer/dører</div><div class="meta">Alder, funksjon, slitasje</div></div>
+    <div class="tile" onclick="openPoint('Drenering/terreng','Utvendig + tak')"><span class="status s0">Ikke startet</span><div class="title">Drenering/terreng</div><div class="meta">Fall, grunnmur, fuktsikring</div></div>
+  </div>
+  <div class="section-title">Kjeller</div><div class="grid3">
+    <div class="tile" onclick="openPoint('Rom under terreng','Kjeller')"><span class="status s0">Ikke startet</span><div class="title">Rom under terreng</div><div class="meta">Fukt, lukt, konstruksjon</div></div>
+    <div class="tile" onclick="openPoint('Vann/avløp','Kjeller')"><span class="status s0">Ikke startet</span><div class="title">Vann/avløp</div><div class="meta">Rør, stoppekran, bereder</div></div>
+    <div class="tile" onclick="openPoint('Elektrisk anlegg','Kjeller')"><span class="status s0">Ikke startet</span><div class="title">EL</div><div class="meta">Sikringsskap, synlige avvik</div></div>
+  </div>
+  <div class="section-title">Etasjer og rom</div><div class="grid3">
+    <div class="tile" onclick="openPoint('Kjøkken','1. etasje')"><span class="status s0">Ikke startet</span><div class="title">Kjøkken</div><div class="meta">Hvitevarer, lekkasjesikring, ventilator</div></div>
+    <div class="tile" onclick="openPoint('Våtrom/bad','1. etasje')"><span class="status s0">Ikke startet</span><div class="title">Bad</div><div class="meta">Sluk, fall, ventilasjon, hulltaking</div></div>
+    <div class="tile" onclick="openPoint('Innvendige overflater','1. etasje')"><span class="status s0">Ikke startet</span><div class="title">Overflater</div><div class="meta">Gulv, vegger, himling</div></div>
+  </div>
+  <div class="section-title">Loft / HMS / andre avvik</div><div class="grid3">
+    <div class="tile" onclick="openPoint('Loft','Loft')"><span class="status s0">Ikke startet</span><div class="title">Loft</div><div class="meta">Lufting, undertak, fukt, skadedyr</div></div>
+    <div class="tile" onclick="openPoint('HMS','HMS/andre avvik')"><span class="status s0">Ikke startet</span><div class="title">HMS</div><div class="meta">Brann, rekkverk, trapp, radon</div></div>
+    <div class="tile" onclick="openPoint('Andre avvik','HMS/andre avvik')"><span class="status s0">Ikke startet</span><div class="title">Andre avvik</div><div class="meta">Forhold uten naturlig IVIT-punkt</div></div>
+  </div>
+</section>
+
+<section id="point" class="screen">
+  <div class="card"><div class="row wrap"><div><h1 id="pointTitle">Taktekking</h1><div class="sub" id="pointSub">Utvendig + tak</div></div><div class="grow"></div><span class="tag">Forskrift/NS: husk dokumentasjon og tydelige observasjoner</span></div></div>
+  <div class="split"><div class="card"><div class="label">Status</div><span class="pill active">✓ Kontrollert</span><span class="pill">Avvik</span><span class="pill">Må tilbake</span><span class="pill">Ikke tilgjengelig</span><div class="field"><div class="label">Kommentar / diktat</div><textarea id="commentBox">Mose mot nord. Begynnende rust på pipebeslag. Ingen tegn til aktiv lekkasje registrert fra loft på befaringsdagen.</textarea></div><div class="field"><div class="label">Hurtigsjekk</div><span class="pill">Materiale</span><span class="pill">Alder</span><span class="pill">Tilkomst</span><span class="pill">Fukt</span><span class="pill">Dokumentasjon</span></div></div>
+  <div class="card"><div class="label">Bilder</div><div class="photo-grid"><div class="photo">+</div><div class="photo">+</div><div class="photo">+</div><div class="photo">+</div></div><p class="mini">Senere: kamera/bildevalg og automatisk filnavn per kontrollpunkt.</p><button class="btn secondary full">+ Hurtignotat</button><button class="btn full" onclick="show('inspection')">✓ Ferdig / tilbake</button></div></div>
+</section>
+
+<section id="export" class="screen">
+  <div class="card"><h1>Eksport</h1><div class="sub">Sortert for videre klipp/lim inn i IVIT, megler og Fiken.</div></div>
+  <div class="grid"><button class="btn" onclick="makeExport('ivit')">IVIT-kladd</button><button class="btn secondary" onclick="makeExport('megler')">Meglerinfo</button><button class="btn secondary" onclick="makeExport('fiken')">Fiken tekst</button><button class="btn secondary" onclick="makeExport('logg')">Befaringslogg</button></div>
+  <div class="card"><div id="exportText" class="export">Trykk en eksportknapp.</div></div>
+</section>
+
+<div class="bottom"><div class="inner"><button class="btn secondary full" onclick="show('inspection')">Befaring</button><button class="btn secondary full" onclick="show('broker')">Meglerinfo</button><button class="btn dark full" onclick="show('export')">Eksport</button></div></div>
+</div>
+<script>
+let current='home', historyStack=[];
+function show(id){ if(current!==id){historyStack.push(current)}; document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); current=id; updateHeader(id); window.scrollTo(0,0); }
+function goBack(){ const prev=historyStack.pop()||'home'; document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(prev).classList.add('active'); current=prev; updateHeader(prev); }
+function updateHeader(id){ const map={home:['JL Befaring','Klikkbar prototype – v0.1'],newcase:['Nytt oppdrag','Opprett enkel oppdragsmappe'],case:['Bergveien 15','Oppdrag 22464-1150'],inspection:['Befaringsmodus','Utvendig → kjeller → etasjer → loft'],broker:['Meglerinfo først','Rask info før rapport er ferdig'],areas:['Arealer og rom','Etasjer, rom og arealnotater'],point:[document.getElementById('pointTitle')?.innerText||'Kontrollpunkt','Kommentar, sjekkliste og bilder'],export:['Eksport','IVIT, megler, Fiken og logg']}; document.getElementById('headTitle').innerText=map[id][0];document.getElementById('headSub').innerText=map[id][1];}
+function openPoint(t,sub){document.getElementById('pointTitle').innerText=t;document.getElementById('pointSub').innerText=sub;show('point')}
+function makeExport(type){let txt=''; if(type==='ivit') txt=`IVIT-KLADD – BERGVEIEN 15\n\nTAKTEKKING\nBeskrivelse:\n[Tekst genereres fra hurtigvalg og kommentar]\n\nObservasjoner/avvik:\nMose mot nord. Begynnende rust på pipebeslag. Ingen tegn til aktiv lekkasje registrert fra loft på befaringsdagen.\n\nTiltak/konsekvens:\n[Må vurderes før innliming i IVIT]\n\nBilder:\nTaktekking_001, Taktekking_002, Taktekking_003\n\n---\n\nROM UNDER TERRENG\nKommentar:\n[notater fra befaring]\n`; if(type==='megler') txt=`MEGLERINFO – KORT FORELØPIG\n\nArealer:\nBRA-i: ___ m²\nBRA-e: ___ m²\nTBA: ___ m²\n\nByggemåte:\nEnebolig oppført med ... Fundamentert på ... Yttervegger av ... Saltak tekket med ...\n\nOverflater:\nKjeller: ...\n1. etasje: ...\n2. etasje: ...\nLoft: ...\n\nOppvarming:\nElektrisk oppvarming. Varmepumpe/ildsted: ...\n\nNB: Foreløpig og må kontrolleres mot endelig rapport.`; if(type==='fiken') txt=`FIKEN – FAKTURATEKST\n\nTilstandsrapport bolig etter forskrift til avhendingslova / NS3600:2025.\nAdresse: Bergveien 15\nOppdragsnummer: 22464-1150\n\nInkluderer befaring, vurderinger, rapportarbeid og ferdigstillelse i IVIT.`; if(type==='logg') txt=`BEFARINGSLOGG – PRAKTISK REKKEFØLGE\n\nUTVENDIG + TAK\n- Taktekking: Mose mot nord. Begynnende rust på pipebeslag.\n- Takrenner: Ikke kontrollert.\n\nKJELLER\n- Rom under terreng: ...\n\n1. ETASJE\n- Kjøkken: ...\n- Bad: ...\n\nLOFT\n- Loft: ...`; document.getElementById('exportText').innerText=txt;}
+updateHeader('home');
+</script>
+</body></html>
